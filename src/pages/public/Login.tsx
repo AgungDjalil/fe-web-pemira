@@ -1,8 +1,8 @@
-import loginTexture from '../assets/bg-texture/bg-texture-login.png';
-import kpum from '../assets/logo/KPUM .png'
-import panwaslu from '../assets/logo/panwaslu.png'
-import pemira from '../assets/logo/pemira.png'
-import itts from '../assets/logo/ITTS.png'
+import loginTexture from '../../assets/bg-texture/bg-texture-login.png';
+import kpum from '../../assets/logo/KPUM .png'
+import panwaslu from '../../assets/logo/panwaslu.png'
+import pemira from '../../assets/logo/pemira.png'
+import itts from '../../assets/logo/ITTS.png'
 
 export function Login() {
     return (
@@ -13,20 +13,20 @@ export function Login() {
             }}
         >
             <div className="absolute -top-7 right-0 p-4">
-                <img src={itts} />
+                <img src={itts} alt='logo itts' />
             </div>
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto">
                 <div className="w-full rounded-lg max-w-md bg-primary-color shadow-xl">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <div className='bg-white rounded-xl flex p-2 gap-4 mb-10'>
                             <div>
-                                <img src={kpum} width={110} height={110}/>
+                                <img src={kpum} width={110} height={110} alt='logo kpum'/>
                             </div>
                             <div>
-                                <img src={pemira} width={130} height={120} />
+                                <img src={pemira} width={130} height={120} alt='logo pemira' />
                             </div>
                             <div>
-                                <img src={panwaslu} width={110} height={110} />
+                                <img src={panwaslu} width={110} height={110} alt='logo panwaslu' />
                             </div>
                         </div>
                         <form className="space-y-6" action="#">
