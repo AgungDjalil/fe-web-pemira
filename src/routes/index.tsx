@@ -2,8 +2,10 @@ import { createBrowserRouter } from "react-router-dom";
 import { Login } from "../pages/public/Login";
 import { VotingBem } from "../pages/public/VotingBem";
 import { LoginAdmin } from "../pages/admin/LoginAdmin";
-import { HomeAdmin } from "../pages/admin/Home";
 import { SideBarAdmin } from "../layout/SideBarAdmin";
+import { AddLegislative } from "../pages/admin/AddLegislatif";
+import { CreateLegislative } from "../pages/admin/CreateLegislative";
+import { NotFoundPage } from "../pages/public/NotFoundPage";
 
 export const router = createBrowserRouter([
     {
@@ -21,16 +23,19 @@ export const router = createBrowserRouter([
                 element : <LoginAdmin />
             },
             {
-                path : '/admin',
                 element : <SideBarAdmin />,
                 children : [
                     {
-                        path : '/admin/home',
-                        element : <HomeAdmin />
+                        path : '/admin/add/legislative',
+                        element : <AddLegislative />
+                    },
+                    {
+                        path : '/admin/create/legislative',
+                        element : <CreateLegislative />
                     }
                 ]
             },
         ],
-        errorElement : <h1>halaman tidak ditemukan</h1>
+        errorElement : <NotFoundPage />
     }
 ])

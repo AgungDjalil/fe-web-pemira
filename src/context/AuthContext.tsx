@@ -8,8 +8,10 @@ type AuthContextProviderProps = {
 type AuthContextType = {
     accessToken: string,
     role: string,
+    nimAdmin: string,
     isReady: boolean,
-    login: (nim: string, password: string) => object
+    login: (nim: string, password: string) => object,
+    logout: () => boolean
 }
 
 export const AuthContext = createContext({} as AuthContextType)
@@ -19,51 +21,69 @@ export function useAuthContext() {
 }
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
-    const [accessToken, setAccessToken] = useState(String)
-    const [role, setRole] = useState(String)
+    const [accessToken, setAccessToken] = useState('')
+    const [role, setRole] = useState('')
+    const [nimAdmin, setNimAdmin] = useState('')
     const [isReady, setIsReady] = useState(false)
 
     useEffect(() => {
-        const storedToken = localStorage.getItem('token');
+        const storedToken = localStorage.getItem('accessToken');
         const storedRole = localStorage.getItem('role');
+        const storedNimAdmin = localStorage.getItem('nimAdmin');
 
-        if (storedToken && storedRole) {
+        if(storedToken && storedRole && storedNimAdmin) {
             setAccessToken(JSON.parse(storedToken))
             setRole(JSON.parse(storedRole))
+            setNimAdmin(JSON.parse(storedNimAdmin));
         }
-
+        
         setIsReady(true)
-
     }, []);
 
     async function login(nim: string, password: string) {
         try {
             const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}api/auth/login/admin`, 
+                `${process.env.REACT_APP_API_URL}/api/auth/login/admin`, 
                 {nim, password}
             )
 
             const { accessToken, role } = response.data
 
-            if(role !== 'admin')
-                throw new Error('Invalid role')
+            if(role !== 'admin') throw new Error('Invalid role')
 
             setAccessToken(accessToken)
             setRole(role)
-            localStorage.setItem('accessToken', accessToken)
-            localStorage.setItem('role', role)
-            
+            setNimAdmin(nim)
+            localStorage.setItem('accessToken', JSON.stringify(accessToken))
+            localStorage.setItem('role', JSON.stringify(role))
+            localStorage.setItem('nimAdmin', JSON.stringify(nim))
+
             return {
                 isSuccess: true
             }
 
         } catch (err: any) {
             const { response } = err
-
+            console.log(err)
             return {
                 isSuccess: false,
                 message: response.data.message
             }
+        }
+    }
+
+    function logout(): boolean  {
+        try {
+            localStorage.removeItem('accessToken')
+            localStorage.removeItem('role')
+            
+            setAccessToken('')
+            setRole('')
+
+            return true
+
+        } catch (err) {
+            return false
         }
     }
 
@@ -72,6 +92,8 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
             value={{
                 accessToken,
                 login,
+                logout,
+                nimAdmin,
                 isReady,
                 role
             }}
