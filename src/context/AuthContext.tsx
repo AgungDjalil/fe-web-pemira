@@ -1,5 +1,7 @@
 import axios from "axios"
 import { ReactNode, createContext, useContext, useEffect, useState } from "react"
+import { TypeUser } from "../enum/type"
+import { LoginParams } from "../interface/loginParam"
 
 type AuthContextProviderProps = {
     children: ReactNode
@@ -8,9 +10,9 @@ type AuthContextProviderProps = {
 type AuthContextType = {
     accessToken: string,
     role: string,
-    nimAdmin: string,
+    nim: string,
     isReady: boolean,
-    login: (nim: string, password: string) => object,
+    login: (params: LoginParams) => object,
     logout: () => boolean
 }
 
@@ -23,40 +25,56 @@ export function useAuthContext() {
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
     const [accessToken, setAccessToken] = useState('')
     const [role, setRole] = useState('')
-    const [nimAdmin, setNimAdmin] = useState('')
+    const [nim, setNim] = useState('')
     const [isReady, setIsReady] = useState(false)
 
     useEffect(() => {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('role')
+        localStorage.removeItem('nim')
+        
+        setAccessToken('')
+        setRole('')
+        setNim('')
         const storedToken = localStorage.getItem('accessToken');
         const storedRole = localStorage.getItem('role');
-        const storedNimAdmin = localStorage.getItem('nimAdmin');
+        const storedNim = localStorage.getItem('nim');
 
-        if(storedToken && storedRole && storedNimAdmin) {
+        if(storedToken && storedRole && storedNim) {
             setAccessToken(JSON.parse(storedToken))
             setRole(JSON.parse(storedRole))
-            setNimAdmin(JSON.parse(storedNimAdmin));
+            setNim(JSON.parse(storedNim));
         }
         
         setIsReady(true)
-    }, []);
+    }, [setAccessToken, setRole, setNim]);
 
-    async function login(nim: string, password: string) {
+    async function login(params: LoginParams) {
+        let response: any = null
         try {
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/api/auth/login/admin`, 
-                {nim, password}
-            )
+            if(params.type === 'admin') {
+                response = await axios.post(
+                    `${process.env.REACT_APP_API_URL}/api/auth/login/admin`, 
+                    {nim: params.nim, password: params.password}
+                )
+            } else if (params.type === 'voter') {
+                response = await axios.post(
+                    `${process.env.REACT_APP_API_URL}/api/auth/login/vote`, 
+                    {nim: params.nim, fullName: params.fullName}
+                )
+            }
+
+            if(!response)
+                console.log('response undefined')
 
             const { accessToken, role } = response.data
 
-            if(role !== 'admin') throw new Error('Invalid role')
-
             setAccessToken(accessToken)
             setRole(role)
-            setNimAdmin(nim)
+            setNim(nim)
             localStorage.setItem('accessToken', JSON.stringify(accessToken))
             localStorage.setItem('role', JSON.stringify(role))
-            localStorage.setItem('nimAdmin', JSON.stringify(nim))
+            localStorage.setItem('nim', JSON.stringify(nim))
 
             return {
                 isSuccess: true
@@ -76,9 +94,11 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         try {
             localStorage.removeItem('accessToken')
             localStorage.removeItem('role')
+            localStorage.removeItem('nim')
             
             setAccessToken('')
             setRole('')
+            setNim('')
 
             return true
 
@@ -93,7 +113,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
                 accessToken,
                 login,
                 logout,
-                nimAdmin,
+                nim,
                 isReady,
                 role
             }}

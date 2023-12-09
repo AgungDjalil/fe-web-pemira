@@ -1,7 +1,7 @@
 import React, { useState } from "react"
-import { useLegislativeTypeContext } from "../../context/LegislativeType"
-import { useAuthContext } from "../../context/AuthContext"
-import axios from "axios"
+import { useLegislativeTypeContext } from "../../../context/LegislativeType"
+import { useAuthContext } from "../../../context/AuthContext"
+import { useNavigate } from "react-router-dom"
 
 export function CreateLegislative() {
     const [legislativeType, setLegislativeType] = useState('')
@@ -11,7 +11,9 @@ export function CreateLegislative() {
     const [visi, setVisi] = useState('')
 
     const { createCalonLegislative } = useLegislativeTypeContext()
-    const { nimAdmin } = useAuthContext()
+    const { nim } = useAuthContext()
+
+    const navigate = useNavigate()
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -23,15 +25,18 @@ export function CreateLegislative() {
         e.preventDefault()
 
         const dataForm = new FormData()
-        if(photoFile) {
+        if(photoFile)
             dataForm.append('file', photoFile)
-            dataForm.append('nimAdmin', nimAdmin)
-            dataForm.append('legislativeType', legislativeType)
-            dataForm.append('visi', visi)
-            dataForm.append('misi', misi)
-            dataForm.append('serialNumber', String(serialNumber))
-            createCalonLegislative(dataForm)
-        }
+        
+        dataForm.append('nimAdmin', nim)
+        dataForm.append('legislativeType', legislativeType)
+        dataForm.append('visi', visi)
+        dataForm.append('misi', misi)
+        dataForm.append('serialNumber', String(serialNumber))
+        
+        const isSuccess = await createCalonLegislative(dataForm)
+        if(isSuccess)
+            navigate('/admin/add/legislative')
     }
 
     return (

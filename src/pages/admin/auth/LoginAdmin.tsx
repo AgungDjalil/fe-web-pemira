@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { useAuthContext } from "../../context/AuthContext"
+import { useAuthContext } from "../../../context/AuthContext"
 import { useNavigate } from "react-router-dom"
+import { TypeUser } from "../../../enum/type"
 
 export function LoginAdmin() {
     const { login } = useAuthContext()
@@ -11,10 +12,10 @@ export function LoginAdmin() {
 
     async function handleSubmit(e: any) {
         e.preventDefault()
-        const result: any = await login(nim, password)
+        const result: any = await login({nim, password, type: TypeUser.Admin, fullName: ''})
 
         if(result.isSuccess) 
-            navigate('/admin/add/legislative')
+            navigate('/admin/legislative/bem')
 
         if(!result.isSuccess)
             setError(result.message)
