@@ -2,13 +2,17 @@ import axios from "axios"
 import { ReactNode, useContext, createContext, useState } from "react"
 import { LegislativeEnum } from "../enum/legislativeType"
 
-type LegislativeTypeProvider = {
+type LegislativeTypeProviderProps = {
     children: ReactNode
 }
 
 type LegislativeType = {
-    createCalonLegislative: (dataForm: any) => Promise<boolean>,
-    voteCandidate: (type: LegislativeEnum, nim: string, candidateID: string) => void
+    navbarLogo: string,
+    setNavbarLogo: React.Dispatch<React.SetStateAction<string>>,
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    isOpen: boolean,
+    createCalonLegislative: (dataForm: any, accessToken: string) => Promise<boolean>,
+    voteCandidate: (type: LegislativeEnum, nim: string, candidateID: string, accessToken: string) => Promise<boolean>
 }
 
 export const LegislativeTypeContext = createContext({} as LegislativeType)
@@ -17,28 +21,21 @@ export function useLegislativeTypeContext() {
     return useContext(LegislativeTypeContext)
 }
 
-export function LegislativeTypeProvider({ children }: LegislativeTypeProvider) {
+export function LegislativeTypeProvider({ children }: LegislativeTypeProviderProps) {
+    const [navbarLogo, setNavbarLogo] = useState('')
+    const [isOpen, setIsOpen] = useState(false)
 
-    async function voteCandidate(type: LegislativeEnum, nim: string, candidateID: string) {
+    async function voteCandidate(type: LegislativeEnum, nim: string, candidateID: string, accessToken: string) {
         try {
             const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}/api/polling/${type}`,
-                {nim, candidateID}
+                {voterNim: nim, candidateID},
+                {
+                    headers: { Authorization: `Bearer ${accessToken}`}
+                }
             )
 
             console.log(response)
-
-        } catch (err) {
-            throw err
-        }
-    }
-
-    async function createCalonLegislative(dataForm: any): Promise<boolean> {
-        try {
-            await axios.post(
-                `${process.env.REACT_APP_API_URL}/api/candidate/create`,
-                dataForm
-            )
 
             return true
 
@@ -48,9 +45,30 @@ export function LegislativeTypeProvider({ children }: LegislativeTypeProvider) {
         }
     }
 
+    async function createCalonLegislative(dataForm: any, accessToken: string): Promise<boolean> {
+        try {
+            await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/candidate/create`,
+                dataForm,
+                {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                }
+            )
+
+            return true
+
+        } catch (err: any) {
+            const { response } = err
+            console.log(response)
+            return false
+        }
+    }
+
     return (
         <LegislativeTypeContext.Provider
             value={{
+                setIsOpen, isOpen,
+                navbarLogo, setNavbarLogo,
                 createCalonLegislative,
                 voteCandidate
             }}

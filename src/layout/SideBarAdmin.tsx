@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import { LoadingComp } from "../components/LoadingComp";
-import { NotFoundPage } from "../pages/public/NotFoundPage";
+import { NotFoundPage } from "../pages/voter/NotFoundPage";
 
 export function SideBarAdmin() {
     const { logout, isReady, role } = useAuthContext()

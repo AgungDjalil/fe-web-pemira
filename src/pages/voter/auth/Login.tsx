@@ -25,6 +25,7 @@ export function Login() {
         if (!result.isSuccess)
             setError(result.message)
     }
+    
     return (
         <div
             className="bg-cover bg-center h-screen flex items-center"

@@ -1,13 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Login } from "../pages/public/auth/Login";
-import { VotingBem, loaderVotingBem } from "../pages/public/votePage/VotingBem";
+import { Login } from "../pages/voter/auth/Login";
+import { VotingBem, loaderVotingBem } from "../pages/voter/votePage/VotingBem";
 import { LoginAdmin } from "../pages/admin/auth/LoginAdmin";
 import { SideBarAdmin } from "../layout/SideBarAdmin";
 import { AddLegislative } from "../pages/admin/addLegislative/AddLegislatif";
 import { CreateLegislative } from "../pages/admin/addLegislative/CreateLegislative";
-import { NotFoundPage } from "../pages/public/NotFoundPage";
+import { NotFoundPage } from "../pages/voter/NotFoundPage";
 import { loaderAddLegislativeType } from '../pages/admin/addLegislative/AddLegislatif'
 import { VoteLay } from "../layout/VoteLay";
+import { VotingDpm, loaderVotingDpm } from "../pages/voter/votePage/VotingDpm";
+import { ThanksPage } from "../pages/voter/ThanksPage";
+import { LoadingComp } from "../components/LoadingComp";
 
 export const router = createBrowserRouter([
     {
@@ -21,12 +24,21 @@ export const router = createBrowserRouter([
                 element : <LoginAdmin />
             },
             {
+                path: '/thanksPage',
+                element: <ThanksPage />
+            },
+            {
                 element : <VoteLay />,
                 children: [
                     {
-                        path: '/votingbem',
+                        path: '/votingBem',
                         element: <VotingBem />,
                         loader: loaderVotingBem
+                    },
+                    {
+                        path: '/votingDpm',
+                        element: <VotingDpm />,
+                        loader: loaderVotingDpm
                     }
                 ]
             },
