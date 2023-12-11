@@ -10,7 +10,6 @@ import { loaderAddLegislativeType } from '../pages/admin/addLegislative/AddLegis
 import { VoteLay } from "../layout/VoteLay";
 import { VotingDpm, loaderVotingDpm } from "../pages/voter/votePage/VotingDpm";
 import { ThanksPage } from "../pages/voter/ThanksPage";
-import { LoadingComp } from "../components/LoadingComp";
 
 export const router = createBrowserRouter([
     {
