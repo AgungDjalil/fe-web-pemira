@@ -4,12 +4,13 @@ import { VotingBem, loaderVotingBem } from "../pages/voter/votePage/VotingBem";
 import { LoginAdmin } from "../pages/admin/auth/LoginAdmin";
 import { SideBarAdmin } from "../layout/SideBarAdmin";
 import { AddLegislative } from "../pages/admin/addLegislative/AddLegislatif";
-import { CreateLegislative } from "../pages/admin/addLegislative/CreateLegislative";
 import { NotFoundPage } from "../pages/voter/NotFoundPage";
 import { loaderAddLegislativeType } from '../pages/admin/addLegislative/AddLegislatif'
 import { VoteLay } from "../layout/VoteLay";
 import { VotingDpm, loaderVotingDpm } from "../pages/voter/votePage/VotingDpm";
 import { ThanksPage } from "../pages/voter/ThanksPage";
+import { UpdateLegislative } from "../pages/admin/updateLegislative/UpdateLegislative";
+import { CreateCandidate } from "../pages/admin/addLegislative/CreateCandidate";
 
 export const router = createBrowserRouter([
     {
@@ -51,7 +52,11 @@ export const router = createBrowserRouter([
                     },
                     {
                         path : '/admin/create/legislative',
-                        element : <CreateLegislative />
+                        element : <CreateCandidate />
+                    },
+                    {
+                        path: '/admin/edit/legislative/:candidateID',
+                        element: <UpdateLegislative />
                     }
                 ]
             },

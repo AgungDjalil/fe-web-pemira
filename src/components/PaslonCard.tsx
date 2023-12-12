@@ -2,11 +2,15 @@ import PropTypes, { InferProps } from 'prop-types'
 import { VisiMisiComp } from './VisiMisiComp'
 import { ConfirmPopup } from './ConfirmComp'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export function PaslonCard(
     { visi, misi, imageUrl, isShow, candidateID, type, namaKetua, namaWakil, namaCalon }: InferProps<typeof PaslonCard.propTypes>
 ) {
     const [isOpen, setIsOpen] = useState(false)
+    const navigate = useNavigate()
+
+    const handleUpdateButton = () => navigate(`/admin/edit/legislative/${candidateID}`)
 
     return (
         <div className="bg-primary-color p-8 rounded-lg shadow-md flex transition-shadow hover:shadow-primary-color">
@@ -15,23 +19,29 @@ export function PaslonCard(
                 <div className="flex justify-between items-center">
                     {
                         isShow &&
-                            <button onClick={() => setIsOpen(true)} className="bg-black text-white px-4 py-2 rounded-md">
-                                Pilih
-                            </button>
+                        <button onClick={() => setIsOpen(true)} className="bg-black text-white px-4 py-2 rounded-md">
+                            Pilih
+                        </button>
+                    }
+                    {
+                        !isShow &&
+                        <button onClick={handleUpdateButton} className="bg-black text-white px-4 py-2 rounded-md">
+                            edit
+                        </button>
                     }
                     <div className="max-w-md p-8 flex">
                         <VisiMisiComp visi={visi} misi={misi} />
                     </div>
                     {
                         isOpen &&
-                            <ConfirmPopup
-                                setIsOpen={setIsOpen}
-                                namaCalon={namaCalon ? namaCalon : ''}
-                                namaKetua={namaKetua ? namaKetua : ''}
-                                namaWakil={namaWakil ? namaWakil : ''}
-                                candidateID={candidateID}
-                                type={type}
-                            />
+                        <ConfirmPopup
+                            setIsOpen={setIsOpen}
+                            namaCalon={namaCalon ? namaCalon : ''}
+                            namaKetua={namaKetua ? namaKetua : ''}
+                            namaWakil={namaWakil ? namaWakil : ''}
+                            candidateID={candidateID}
+                            type={type}
+                        />
                     }
                 </div>
             </div>

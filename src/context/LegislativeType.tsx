@@ -12,7 +12,8 @@ type LegislativeType = {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
     isOpen: boolean,
     createCalonLegislative: (dataForm: any, accessToken: string) => Promise<boolean>,
-    voteCandidate: (type: LegislativeEnum, nim: string, candidateID: string, accessToken: string) => Promise<boolean>
+    voteCandidate: (type: LegislativeEnum, nim: string, candidateID: string, accessToken: string) => Promise<boolean>,
+    updateCandidate: ((dataForm: any, accessToken: string) => Promise<boolean>)
 }
 
 export const LegislativeTypeContext = createContext({} as LegislativeType)
@@ -24,6 +25,25 @@ export function useLegislativeTypeContext() {
 export function LegislativeTypeProvider({ children }: LegislativeTypeProviderProps) {
     const [navbarLogo, setNavbarLogo] = useState('')
     const [isOpen, setIsOpen] = useState(false)
+
+    async function updateCandidate(dataForm: any, accessToken: string) {
+        try {
+            await axios.patch(
+                `${process.env.REACT_APP_API_URL}/api/candidate/update`,
+                dataForm,
+                {
+                    headers: { Authorization: `Bearer ${accessToken}` }
+                }
+            )
+
+            return true
+
+        } catch (err: any) {
+            const { response } = err
+            console.log(response)
+            return false
+        }
+    }
 
     async function voteCandidate(type: LegislativeEnum, nim: string, candidateID: string, accessToken: string) {
         try {
@@ -70,6 +90,7 @@ export function LegislativeTypeProvider({ children }: LegislativeTypeProviderPro
                 setIsOpen, isOpen,
                 navbarLogo, setNavbarLogo,
                 createCalonLegislative,
+                updateCandidate,
                 voteCandidate
             }}
         >

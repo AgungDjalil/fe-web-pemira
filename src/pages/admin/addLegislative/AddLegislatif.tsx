@@ -25,11 +25,9 @@ export function AddLegislative() {
     navigate(`/admin/legislative/${ev.target.value}`)
   }
 
-  if (!isReady && !role)
-    return <LoadingComp />
+  if (!isReady && !role) return <LoadingComp />
 
-  if (isReady && role !== 'admin')
-    return <NotFoundPage />
+  if (isReady && role !== 'admin') return <NotFoundPage />
 
   return (
     <main>

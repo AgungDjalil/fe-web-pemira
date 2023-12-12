@@ -4,6 +4,15 @@ const bufferToString = (bufferFIle: Buffer) => {
 	return imageUrl
 }
 
+export const getOneCalonLegislative = (candidateID: string | undefined, accessToken: string) => {
+	return fetch(
+		`${process.env.REACT_APP_API_URL}/api/candidate/${candidateID}`, {
+			headers: { Authorization: `Bearer ${accessToken }`}
+		}
+	)
+		.then(response => response.json())
+}
+
 export const getCalonLegislative = (type: string) => {
 	return fetch(`${process.env.REACT_APP_API_URL}/api/candidate?legislativeType=${type}`)
 		.then(response => response.json())
