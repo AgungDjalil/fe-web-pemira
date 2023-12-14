@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { LegislativeEnum } from '../enum/legislativeType';
 import { useAuthContext } from '../context/AuthContext';
 import { useState } from 'react';
+import { fetchDeleteApi, fetchVerifyApi } from './TableComp';
 
 export function ConfirmPopup({
     type,
@@ -11,7 +12,9 @@ export function ConfirmPopup({
     namaKetua,
     namaWakil,
     namaCalon,
-    setIsOpen
+    setIsOpen,
+    nimVoter,
+    voterID,
 }: InferProps<typeof ConfirmPopup.propTypes>) {
     const { voteCandidate } = useLegislativeTypeContext()
     const { accessToken, nim } = useAuthContext()
@@ -22,14 +25,35 @@ export function ConfirmPopup({
     const handleClickConfirm = async () => {
         setIsSend(true);
 
-        const isSuccess = await voteCandidate(
-            type === 'bem' ? LegislativeEnum.Bem : LegislativeEnum.dpm,
+        let isSuccess
+
+        if(type === 'bem') { 
+            isSuccess = await voteCandidate(
+            LegislativeEnum.Bem,
             nim, candidateID, accessToken
-        );
+        )}
+
+        if(type === 'dpm') {
+            isSuccess = await voteCandidate(
+                LegislativeEnum.dpm,
+                nim, candidateID, accessToken
+            )
+        }
+
+        if(type === 'voter') {
+            isSuccess = await fetchVerifyApi(voterID, nimVoter, accessToken)
+        }
+
+        if(type === 'delete') {
+            console.log('masuk sini')
+            isSuccess = await fetchDeleteApi(voterID, accessToken, nimVoter)
+        }
 
         if (isSuccess && type === 'bem') navigate('/votingDpm');
-        
+
         if (isSuccess && type === 'dpm') navigate('/thanksPage');
+
+        if (isSuccess && type === 'voter' || type === 'delete') navigate('/admin/voter/page/1/search/null')
     };
 
     return (
@@ -48,16 +72,23 @@ export function ConfirmPopup({
                         </button>
                     </div>
                     <p className="mt-4 mb-5 text-lg font-normal text-gray-500 text-center">
-                        yakin memilih
+
                         {
-                            type === 'bem' ?
-                                (
-                                    ' pasangan ' + namaKetua + ' dan ' + namaWakil
-                                ) :
-                                (
-                                    ' ' + namaCalon
-                                )
-                        }?
+                            type === 'bem' &&
+                                `yakin memilih pasangan ${namaKetua} dan ${namaWakil}`
+                        }
+                        {
+                            type === 'dpm' &&
+                                `yakin memilih ${namaCalon}`
+                        }
+                        {
+                            type === 'voter' &&
+                                `yakin ingin verifikasi data ini?`
+                        }
+                        {
+                            type === 'delete' &&
+                                'yakin ingin menghapus data ini?'
+                        }
                     </p>
                 </div>
                 <div className="bg-gray-100 px-6 py-4 flex justify-center">
@@ -86,5 +117,7 @@ ConfirmPopup.propTypes = {
     namaWakil: PropTypes.string.isRequired,
     namaKetua: PropTypes.string.isRequired,
     namaCalon: PropTypes.string.isRequired,
-    setIsOpen: PropTypes.func.isRequired
+    setIsOpen: PropTypes.func.isRequired,
+    nimVoter: PropTypes.string.isRequired,
+    voterID: PropTypes.string.isRequired
 };

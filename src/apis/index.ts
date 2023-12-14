@@ -4,6 +4,27 @@ const bufferToString = (bufferFIle: Buffer) => {
 	return imageUrl
 }
 
+export const getVoteCount = (candidateID: string, accessToken: string, type: string) => {
+	return fetch(
+		`${process.env.REACT_APP_API_URL}/api/polling/${candidateID}/${type}`, {
+			headers: { Authorization: `Bearer ${accessToken }`}
+		}
+	)
+		.then(response => response.json())
+		.then(data => data)
+}
+
+export const getAllVoters = (page: number, searchTerm: string, accessToken: string) => {
+	return fetch(
+		searchTerm !== 'null' ? `${process.env.REACT_APP_API_URL}/api/voters?search=${searchTerm}` :
+					`${process.env.REACT_APP_API_URL}/api/voters?page=${page}`, 
+					{ headers: { Authorization: `Bearer ${accessToken}` }
+		}
+	)
+		.then(response => response.json())
+		.then(data => data)
+}
+
 export const getOneCalonLegislative = (candidateID: string | undefined, accessToken: string) => {
 	return fetch(
 		`${process.env.REACT_APP_API_URL}/api/candidate/${candidateID}`, {

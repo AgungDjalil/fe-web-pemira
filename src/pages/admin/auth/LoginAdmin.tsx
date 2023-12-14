@@ -12,6 +12,7 @@ export function LoginAdmin() {
 
     async function handleSubmit(e: any) {
         e.preventDefault()
+        console.log('masuk sini')
         const result: any = await login({nim, password, type: TypeUser.Admin, fullName: ''})
 
         if(result.isSuccess) 

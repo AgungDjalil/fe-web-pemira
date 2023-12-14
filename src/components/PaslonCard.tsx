@@ -3,6 +3,7 @@ import { VisiMisiComp } from './VisiMisiComp'
 import { ConfirmPopup } from './ConfirmComp'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { PollingComp } from './PollingComp'
 
 export function PaslonCard(
     { visi, misi, imageUrl, isShow, candidateID, type, namaKetua, namaWakil, namaCalon }: InferProps<typeof PaslonCard.propTypes>
@@ -35,6 +36,8 @@ export function PaslonCard(
                     {
                         isOpen &&
                         <ConfirmPopup
+                            nimVoter=''
+                            voterID=''
                             setIsOpen={setIsOpen}
                             namaCalon={namaCalon ? namaCalon : ''}
                             namaKetua={namaKetua ? namaKetua : ''}
@@ -44,6 +47,10 @@ export function PaslonCard(
                         />
                     }
                 </div>
+                {
+                    !isShow &&
+                    <PollingComp candidateID={candidateID} type={type} />
+                }
             </div>
         </div>
     )
@@ -58,5 +65,5 @@ PaslonCard.propTypes = {
     type: PropTypes.string.isRequired,
     namaKetua: PropTypes.string.isRequired,
     namaWakil: PropTypes.string.isRequired,
-    namaCalon: PropTypes.string.isRequired,
+    namaCalon: PropTypes.string.isRequired
 }
