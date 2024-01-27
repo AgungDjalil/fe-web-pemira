@@ -35,16 +35,16 @@ export function PaslonCard(
                     </div>
                     {
                         isOpen &&
-                        <ConfirmPopup
-                            nimVoter=''
-                            voterID=''
-                            setIsOpen={setIsOpen}
-                            namaCalon={namaCalon ? namaCalon : ''}
-                            namaKetua={namaKetua ? namaKetua : ''}
-                            namaWakil={namaWakil ? namaWakil : ''}
-                            candidateID={candidateID}
-                            type={type}
-                        />
+                            <ConfirmPopup
+                                nimVoter=''
+                                voterID=''
+                                setIsOpen={setIsOpen}
+                                namaCalon={namaCalon ? namaCalon : ''}
+                                namaKetua={namaKetua ? namaKetua : ''}
+                                namaWakil={namaWakil ? namaWakil : ''}
+                                candidateID={candidateID}
+                                type={type}
+                            />
                     }
                 </div>
                 {
